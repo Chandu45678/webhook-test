@@ -2,7 +2,7 @@
 
 3.	Click Create bot
  Step 2: Create Bot
-1.	Choose:
+1.	Choose:;
 o	 Create a blank bot
 2.	Enter:..
 o	Bot name: HotelBookingBot

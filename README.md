@@ -1,7 +1,6 @@
 # webhook-test
 
 3.	Click Create bot
-________________________________________
  Step 2: Create Bot
 1.	Choose:
 o	 Create a blank bot

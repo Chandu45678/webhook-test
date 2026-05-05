@@ -4,7 +4,7 @@
  Step 2: Create Bot
 1.	Choose:
 o	 Create a blank bot
-2.	Enter:
+2.	Enter:..
 o	Bot name: HotelBookingBot
 3.	IAM role → Create new role
 4.	Remaining defaultnext

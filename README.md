@@ -140,3 +140,79 @@ User: Double
 Bot: Do you want to confirm booking in Hyderabad for 2 nights?
 User: Yes
 Bot: Booking confirmed.
+
+
+
+///9 wk 
+Copy the ssh key of instance and paste in the powershell 
+Run sudo yum update –y  command in the powershell 
+Run sudo yum install httpd  –y  command in the powershell 
+Run  systemctl start httpd 
+systemctl enable httpd 
+echo  "This is Server 1" > /var/www/html/index.html
+
+//for instance 2
+Configure Security Group: 
+• Allow SSH (22) from anywhere 
+• Allow HTTP (80) from anywhere (0.0.0.0/0) 
+
+Name : loadbalancer-sg -> give description 
+click on add rule of inbound rule -> Allow HTTP (80) from anywhere 
+Leave the outbound rules as default  
+Click on create security group 
+Go to EC2 → Load Balancers → Click on Create Load Balancer
+lick on create of Application Load Balancer .Name: my-loadbalancer ->  Scheme: Internet-facing 
+IP address type: IPv4 
+ 
+Select the  deafault VPC where your EC2 instances exist 
+Select all subnets (one for each instance if possible  
+Choose the loadbalancer-sg security group created earlier.Click on create target group 
+ 
+Name: my-targetgroup -> Target type: Instance 
+Protocol: HTTP -> Port: 80 
+Select ipv4 -> select the default vpc -> click on next .Select all the instances -> Click Include as pending → Click on next 
+Review all settings → Click Create target group 
+Go to Load Balancers → Select the loadbalancer → Description → copy the DNS name 
+Paste it in a browser → You should see either WebServer-1 or WebServer-2 page. 
+Refresh multiple times → Load balancer distributes traffic between the two instances 
+Auto Scaling Group with Load Balancer 
+ 
+Go to EC2 Console → Instances -> Select the EC2 instance  
+Click Actions → Image and Templates → Create Image 
+ 
+Provide Image Name: e.g., my-webserver-AMI 
+Optional: Add description 
+Click Create Image 
+Go to EC2 → instances->Launch Templates → Create Launch Template 
+ 
+Launch Template Name: my –template 
+Add description 
+Select  My AMIs -> select owned by  me 
+AMI: Select the AMI created in Step 1 (webserver-1-AMI) 
+ 
+Instance Type: t2.micro 
+Key Pair: Select your existing key pair 
+Set Health Check Grace Period: 3 seconds 
+Click Next 
+ 
+Desired Capacity: 2 (initial instances)  
+Minimum Capacity: 1 -> Maximum Capacity: 4 
+Click Next
+Leave notifications and tags as default -> click next 
+ 
+Review all settings 
+Click Create Auto Scaling Group 
+Go to Load Balancers → Select your Load Balancer 
+Check Auto Scaling Group → Instances 
+• You may see up to 4 instances if scaling triggers 
+ 
+Test auto recovery: 
+Select the instance -> Terminate the instance
+ 
+2 instances will be created automatically by the auto scaling 
+Select the load balancer -> copy the DNS name 
+ 
+Paste the DNS in the incognito mode 
+ You should see your web page from one of the instances -> Refresh multiple times → traffic alternates 
+between instances 
+ 

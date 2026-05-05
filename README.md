@@ -216,3 +216,27 @@ Paste the DNS in the incognito mode
  You should see your web page from one of the instances -> Refresh multiple times → traffic alternates 
 between instances 
  
+//
+echo '<!DOCTYPE html>
+<html>
+<head><title>Demo App</title></head>
+<body>
+<h2>AWS Elastic Beanstalk App</h2>
+
+<form>
+Name: <input type="text"><br><br>
+Email: <input type="email"><br><br>
+
+Skills:<br>
+<input type="checkbox"> Java<br>
+<input type="checkbox"> Python<br><br>
+
+Gender:<br>
+<input type="radio" name="g"> Male
+<input type="radio" name="g"> Female<br><br>
+
+<button>Submit</button>
+</form>
+
+</body>
+</html>' > index.html

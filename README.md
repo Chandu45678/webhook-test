@@ -1,3 +1,4 @@
+//ex[2 
 import string
 password = input("Enter password: ")
 conditions = 0

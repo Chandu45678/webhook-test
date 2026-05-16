@@ -733,3 +733,96 @@ network->network nd internet
 browser->privacy nd seciuttuy
 settings-?filesbackup
 
+
+Step-3: Start AVD from Command Prompt1
+
+
+C:\Users\Admin>cd C:\Users\Admin\AppData\Local\Android\Sdk\emulator
+
+C:\Users\Admin\AppData\Local\Android\Sdk\emulator>emulator -list-avds
+
+Medium_Phone_API_36.1
+
+Pixel_2
+
+Pixel_9
+
+C:\Users\Admin\AppData\Local\Android\Sdk\emulator>emulator -avd Pixel_9 -http-proxy http://10.0.2.2:8080
+
+Step-4: Setup Proxy:
+
+In AVD
+
+
+Settings-> Network and Internet-> internet->select icon -> top right corner there is edit->advanced options -> proxy->Change proxy None->Manual->Hostname as 10.0.2.2 ->save
+
+Note:if save option is not working then follow the steps in command prompt 
+
+Command Prompt2:
+
+C:\Users\Admin>cd C:\Users\Admin\AppData\Local\Android\Sdk\platform-tools
+
+C:\Users\Admin\AppData\Local\Android\Sdk\platform-tools>adb devices
+
+List of devices attached
+
+emulator-5554   device
+
+C:\Users\Admin\AppData\Local\Android\Sdk\platform-tools>adb shell settings put global http_proxy 10.0.2.2:8080
+
+C:\Users\Admin\AppData\Local\Android\Sdk\platform-tools>adb shell settings get global http_proxy
+
+10.0.2.2:8080
+
+Step 5: In BurpSuit
+
+Go procy->options/proxy settings->under Proxy Listeners->Edit->select All interfaces->ok
+
+Go proxy->intercept on
+
+Step 6: in AVD type in chrome example.com and you can see burpsuit HTTP history
+
+Step 7: in Step 5 we only able to http request and response only but if you want to analyse https request and response follow the Procedure to download CA certificate from BunrpSuit.
+
+Go procy->options/proxy settings->import/export CA certificate->Certificate in DER format->select file-> Downloads->give name as burpcer.der
+
+Step 8: Sending CA certificate to AVD
+
+Go to command Prompt2
+C:\Users\Admin\AppData\Local\Android\Sdk\platform-tools>adb push C:\Users\Admin\Downloads\burpcer.cer /sdcard/Download/
+
+ 
+
+To install Certificate in AVD
+
+Settings
+
+→ Security & privacy
+
+→ More security & privacy
+
+→ Encryption & credentials
+
+→ Install a certificate
+
+→ CA certificate
+
+In AVD we can see burpcer.der certificate
+Step 9:verify HTTPS Interception
+
+Open browser in emulator.
+
+Visit any HTTPS website.
+
+Example:
+
+https://example.com
+
+In Burp Suite, check Proxy → HTTP History.
+
+Now HTTPS requests and responses will be visible.
+
+
+
+
+

@@ -379,3 +379,357 @@ Observed
 
 
     //
+
+iot devices nd security ports 
+
+docker run -d -p 8090:3000 --name juiceshop bkimminich/juice-shop 
+docker ps -a
+docker start juiceshop
+
+4. If port error or broken container → remove and recreate
+
+Stop:
+
+docker stop juiceshop
+
+Remove:
+
+docker rm juiceshop
+
+Then run again:
+
+docker run -d -p 8090:3000 --name juiceshop bkimminich/juice-shop
+
+Useful commands:
+
+Running containers:
+docker ps
+Logs:
+docker logs juiceshop
+Restart:
+docker restart juiceshop
+ Deployment of simulated IoT device using Docker 
+The application was accessed at: 
+http://localhost:8090 
+
+now type ipconfig            in cmd copy that IPV4 address
+
+
+open kali linux terminal
+nmap -sV {your ip address]
+
+
+eg:   nmap -sV    192.168.0.148             (wait for 1-4 mins)
+It showing service fingerprint / version detection 
+
+
+The simulated IoT device dashboard was accessed through the browser using: 
+http://localhost:8090 
+
+Step 6: Testing Default/Weak Credentials 
+The login functionality was tested using administrator credentials to check for default password 
+vulnerability 
+
+rightlcick->netework gtab-> finish
+Step 7: Developer Tools → Network Tab 
+• Network tab showing HTTP requests 
+• Plain text traffic visible 
+
+
+//
+Creating and Analyzing Disk Images Using dc3dd and Autopsy (Alternative to FTK Imager)
+
+echo "Cybersecurity Lab Evidence" > evidence.txt
+
+
+cat   evidence.txt
+ls
+lsblk
+
+Example output:
+sda
+ ├─sda1
+ ├─sda2
+The partition /dev/sda1 will be used for disk imaging
+
+# Install dc3dd
+sudo apt install dc3dd
+
+# Show dc3dd help
+dc3dd --help
+
+# Create 100MB disk file
+dd if=/dev/zero of=practice_disk.dd bs=1M count=100
+
+# Create ext4 filesystem on disk image
+mkfs.ext4 practice_disk.dd
+
+# Verify image file
+ls -lh /home/kali/disk_image.dd
+
+# View acquisition log
+cat /home/kali/acquisition.log
+
+# Start Autopsy
+autopsy
+{or} if it doesnt work go for 
+# Start Autopsy with sudo
+sudo autopsy and eneter password kmit
+
+The terminal will display a URL:
+http://localhost:9999/autopsy
+Open this link in the browser.
+
+Step 7: Create a New Case
+In the Autopsy interface:
+1.	Click Create New Case
+2.	Enter case details:
+
+ 
+Step 8: Add Disk Image
+Select:
+Add Host → Add Image
+Browse and select:
+/home/kali/disk_image.dd
+Autopsy will begin analyzing the disk image.
+Host Name
+KaliLabMachine
+Description
+Kali Linux virtual machine used for forensic disk image investigation
+Time Zone
+Leave Blank
+Time Skew Adjustment
+Leave Blank
+Alert Hash Database
+Leave Blank
+Ignore Hash Database
+Leave Blank
+Then click:
+Next
+Step 9: Analyze Evidence
+
+// log file analayis using incident dectection nd response
+Understanding Log Files 
+Navigate to Log Directory 
+cd /var/log 
+ls 
+
+last 
+journalctl | less 
+Capture: 
+ Logs output  
+Failed SSH Attempts 
+Command: 
+journalctl | grep "Failed" 
+SSH Login Activity 
+Command: 
+journalctl | grep ssh 
+Error Detection 
+Command: journalctl | grep -i error 
+Apache Log Analysis 
+Command: 
+cd /var/log/apache2 
+ls 
+Then: 
+sudo less access.log 
+Apache logs record web requests. These logs help identify suspicious web activity such as 
+repeated requests or attacks. 
+Suspicious Requests 
+Command: 
+grep "404" /var/log/apache2/access.log 
+This  shows failed web requests (404 errors), which may indicate scanning or probing attacks. 
+Command: 
+less /var/log/dpkg.log 
+This  shows software installation and update logs, useful for detecting unauthorized changes. 
+Real-Time Monitoring 
+Command: 
+sudo journalctl -f 
+
+
+//////////optional 
+kali : COMMAND=/usr/bin/less access.log 
+kali : COMMAND=/usr/bin/journalctl -f 
+✔ This is YOU running commands 
+✔ Not suspicious 
+Sudo activity corresponds to legitimate administrative actions performed by the user. 
+
+//////////optional 
+
+
+
+METHOD 1: SIMULATE FAILED SSH LOGIN   
+
+Step 1: Ensure SSH is Installed 
+sudo apt install openssh-server –y 
+Step 2: Start SSH Service 
+sudo service ssh start 
+Step 3: Find Your IP Address 
+ip a 
+Look for something like: 
+inet 192.168.x.x 
+ 
+ 
+ Step 4: Attempt Wrong Login (GENERATE FAILURES) 
+run: 
+ssh fakeuser@localhost 
+OR 
+ssh kali@localhost 
+Enter wrong password multiple times (5–10 times) 
+ 
+Now Analyze Logs 
+Step 5: Check Failed Logins 
+journalctl | grep "Failed password" 
+�
+� You should now see: 
+Failed password for kali from 127.0.0.1 port ... 
+Step 6: Extract Suspicious IP 
+journalctl | grep "Failed password" | awk '{print $11}' 
+Output: 
+127.0.0.1 
+Step 7: Count Attempts Per IP 
+journalctl | grep "Failed password" | awk '{print $11}' | sort 
+| uniq -c | sort -nr 
+Example: 
+10 127.0.0.1 
+INTERPRETATION (VERY IMPORTANT) 
+Multiple failed login attempts were detected from IP address 127.0.0.1, indicating a simulated 
+brute force attack. 
+METHOD 2: Use lastb (Alternative) 
+sudo lastb 
+Shows failed login records 
+HOW TO IDENTIFY “SUSPICIOUS IP” 
+Simple rule: 
+Condition 
+Meaning 
+Same IP repeated many times 🚨 Suspicious 
+Unknown IP 
+�
+� Suspicious 
+High frequency attempts 
+�
+� Brute force 
+Run: 
+journalctl --since "10 minutes ago" 
+Shows recent attack activity
+
+
+
+// 
+//  NETWORK FORENSICS USING WIRESHARK
+
+Step1:Open kali linux terminal 
+Type wireshark &   Select eth0 
+Apply filter as tcp…now you can able to see the only tcp packets. You can also try with 
+UDP,HTTP in search bar
+ip.addr == 192.168.0.161 → filters packets of a specific IP  
+
+Ip.src==<IP_Address> like  
+Ip.src== 192.168.0.161 
+Right click on any TCP packet->Follow->TCP Stream
+//Observation on above tcp stream: 
+  
+Complete conversation between two devices over TCP 
+Red text → Data sent from one device  
+  
+Blue text → Data sent from the other device  
+It reconstructs the entire communication stream 
+
+Step 7: Identifying Suspicious Traffic 
+Open kali linux terminal  
+Type nmap –sS <target_IP>  
+Eg:   nmap –sS 192.168.0.156   (use your windows ip) 
+Open wireshark 
+Use this filter: 
+tcp.flags.syn == 1 && tcp.flags.ack == 0
+In wireshark 
+Go to Statistics->Capture File Properties 
+In wireshark  Go To 
+Statistics->Resolved Address 
+Resolve Address in Wireshark converts numerical network addresses (like IP or MAC) into human
+readable names such as domain names or device names.
+
+Step 10: Go to  
+Statistics-> Protocol Hierarchy Statistics  
+Protocol Hierarchy Statistics shows the breakdown of all network protocols in the captured 
+traffic in a hierarchical (layer-wise) format along with their percentage and packet count. 
+
+Step 11: Go to 
+Statistics->Conversations 
+Conversations in Wireshark shows communication between two endpoints (devices), including 
+source and destination addresses, number of packets, and data transferred. 
+
+Step 12: 
+Statistics-> Packet Length 
+Packet Length refers to the size of a network packet measured in bytes, as captured by Wireshark. 
+
+Step 13: 
+Statistics-> End Points 
+Endpoints in Wireshark represent individual network devices (hosts) involved in communication. It 
+shows each device separately along with the number of packets sent/received and data usage. 
+Step 14:  
+Statistics-> I/O Graphs 
+I/O Graphs (Input/Output Graphs) in Wireshark are used to display network traffic over time in the 
+form of a graph, showing the number of packets or bytes captured per second. 
+
+
+
+
+//   
+wtsapp nd pther data breacgh anyalsis
+
+sudo apt update
+
+sudo apt install -y nodejs npm             (frm both the ocmmands check which eworks)
+
+sudo apt install nodejs npm -y 
+(or) 
+
+sudo npm install -g nativefier
+nativefier https://web.whatsapp.com
+cd WhatsappWeb-linux-x64
+
+ls
+./WhatsAppWeb
+
+open broswer in kali and 
+https://reports.exodus-privacy.eu.org
+
+or )///
+
+# Install nodejs and npm
+sudo apt install -y nodejs npm
+
+# Run WhatsApp desktop
+whatsapp-for-linux
+
+# Open Exodus privacy audit website
+https://reports.exodus-privacy.eu.org/
+
+# Start Wireshark
+wireshark
+
+# Capture packets
+
+# Open Facebook
+https://www.facebook.com
+
+# Open Burp Suite
+burpsuite
+
+# Check email breach
+https://haveibeenpwned.com
+
+
+//windows R 
+enter 
+type     msinfo32 - os version,tyope
+settings-windows update->
+settings-?windows defender firewall_>advanced settings
+windowss ecurity->virus nd threat protection scan if any !
+
+home->account->
+home->apps nd featuires
+network->network nd internet
+browser->privacy nd seciuttuy
+settings-?filesbackup
+
